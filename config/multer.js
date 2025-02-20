@@ -23,7 +23,7 @@ const fileFilter = (req, file, cb) => {
     } else {
         cb(new Error("Invalid file type"), false);
     }
-};
+};0
 
 const upload = multer({
     storage,

@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const videoRoutes = require("./routes/videoRoute");
 const registerRoutes = require("./routes/regiserRoute");
+const courseRoutes = require("./routes/courseRoute");
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ connectDB();
 
 app.use("/api/videos", videoRoutes);
 app.use("/api/users", registerRoutes);
+app.use("/api/courses", courseRoutes);
 
 const PORT = process.env.PORT || 5000;
 
