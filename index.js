@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const videoRoutes = require("./routes/videoRoute");
+const registerRoutes = require("./routes/regiserRoute");
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use("/uploads", express.static("uploads")); // Serve uploaded videos
 connectDB();
 
 app.use("/api/videos", videoRoutes);
+app.use("/api/users", registerRoutes);
 
 const PORT = process.env.PORT || 5000;
 
