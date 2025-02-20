@@ -3,15 +3,25 @@ const fs = require("fs");
 const path = require("path");
 
 // Upload video
+const mongoose = require("mongoose");
+
 exports.uploadVideo = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
+    const { courseId } = req.params;
     const { title } = req.body;
+
+    // Validate if courseId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ message: "Invalid courseId format" });
+    }
+
     const newVideo = new Video({
       title,
+      courseId: new mongoose.Types.ObjectId(courseId), // Convert to ObjectId
       filename: req.file.filename,
       size: req.file.size,
     });
@@ -22,6 +32,7 @@ exports.uploadVideo = async (req, res) => {
     res.status(500).json({ message: "Error uploading video", error: error.message });
   }
 };
+
 
 // Fetch all videos
 exports.getAllVideos = async (req, res) => {
@@ -79,6 +90,37 @@ exports.streamVideo = async (req, res) => {
     fileStream.pipe(res);
   } catch (error) {
     res.status(500).json({ message: "Error streaming video", error: error.message });
+  }
+};
+
+// Delete video
+exports.deleteVideo = async (req, res) => {
+  try {
+    const { videoId, courseId } = req.params;
+
+    // Validate ObjectIds
+    if (!mongoose.Types.ObjectId.isValid(videoId) || !mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ message: "Invalid videoId or courseId format" });
+    }
+
+    // Find the video
+    const video = await Video.findOne({ _id: videoId, courseId });
+    if (!video) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    // Delete the video file from the filesystem
+    const videoPath = path.join(__dirname, "../uploads", video.filename);
+    if (fs.existsSync(videoPath)) {
+      fs.unlinkSync(videoPath);
+    }
+
+    // Remove video from the database
+    await Video.findByIdAndDelete(videoId);
+
+    res.status(200).json({ message: "Video deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting video", error: error.message });
   }
 };
 
