@@ -14,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use("/uploads", express.static("uploads")); // Serve uploaded videos
+app.use("/images", express.static("images"));
 
 // Connect to MongoDB
 connectDB();

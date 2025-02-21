@@ -56,6 +56,30 @@ exports.getVideoById = async (req, res) => {
   }
 };
 
+// Get videos by courseId
+exports.getVideosByCourseId = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    // Validate courseId
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ message: "Invalid courseId format" });
+    }
+
+    // Find videos associated with the given courseId
+    const videos = await Video.find({ courseId });
+
+    if (!videos.length) {
+      return res.status(404).json({ message: "No videos found for this course" });
+    }
+
+    res.status(200).json(videos);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching videos", error: error.message });
+  }
+};
+
+
 
 
 // Stream video in chunks
