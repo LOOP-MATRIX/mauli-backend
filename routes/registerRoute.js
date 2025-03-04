@@ -30,7 +30,7 @@ router.get("/admin-dashboard", checkAdmin, (req, res) => {
 
 // Route to update payment status of a user
 router.put("/:id/payment-status", updatePaymentStatus);
-router.put("/duedate/:userId/:duedateId",updateDueDateStatus)
+// router.put("/duedate/:userId/:duedateId",updateDueDateStatus)
 
 
 module.exports = router;

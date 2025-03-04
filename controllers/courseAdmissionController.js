@@ -1,9 +1,37 @@
 const CourseAdmission = require("../models/courseAdmission");
 
 // Create a new course admission entry
+// const createAdmission = async (req, res) => {
+//     try {
+//         const { name, Qualification, YoP, course, address, phone, email } = req.body;
+
+//         // Check if email already exists
+//         const existingUser = await CourseAdmission.findOne({ email });
+//         if (existingUser) {
+//             return res.status(400).json({ message: "Email already registered" });
+//         }
+
+//         // Create a new admission entry
+//         const newAdmission = new CourseAdmission({
+//             name,
+//             Qualification,
+//             YoP,
+//             course,
+//             address,
+//             phone,
+//             email
+//         });
+
+//         await newAdmission.save();
+//         res.status(201).json({ message: "Admission Successful", admission: newAdmission });
+//     } catch (err) {
+//         res.status(500).json({ message: err.message });
+//     }
+// };
+
 const createAdmission = async (req, res) => {
     try {
-        const { name, Qualification, YoP, course, address, phone, email } = req.body;
+        const { name,subject,message, email } = req.body;
 
         // Check if email already exists
         const existingUser = await CourseAdmission.findOne({ email });
@@ -14,11 +42,8 @@ const createAdmission = async (req, res) => {
         // Create a new admission entry
         const newAdmission = new CourseAdmission({
             name,
-            Qualification,
-            YoP,
-            course,
-            address,
-            phone,
+            subject,
+            message,
             email
         });
 
