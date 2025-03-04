@@ -1,6 +1,6 @@
 const batchSchema = require("../models/batch");
 const courseSchema = require("../models/course");
-const facultySchema = require("../models/faculty");
+// const facultySchema = require("../models/faculty");
 const videoSchema = require("../models/video");
 const registerSchema = require("../models/register");
 

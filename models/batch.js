@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const faculty = require('./faculty');
 
 const batchSchema = new mongoose.Schema({
     name:{
