@@ -4,36 +4,13 @@ const batchSchema = require("../models/batch");
 // Create a new course
 exports.createCourse = async (req, res) => {
   try {
-    const {
-      name,
-      duration,
-      fees,
-      // discount,
-      // installments,
-      // recordingsAvailability,
-      // language,
-      // classModule,
-      // platform,
-      // studyMaterial,
-      // certificate,
-      // discussionPlatform,
-      keyPoints,
-    } = req.body;
+    const { name, duration, fees, keyPoints } = req.body;
     const image = req.file ? req.file.filename : "";
 
     const course = new Course({
       name,
       duration,
       fees,
-      // discount,
-      // installments,
-      // recordingsAvailability,
-      // language,
-      // classModule,
-      // platform,
-      // studyMaterial,
-      // certificate,
-      // discussionPlatform,
       keyPoints,
       image,
     });
