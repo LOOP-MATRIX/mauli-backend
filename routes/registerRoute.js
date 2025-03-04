@@ -8,12 +8,11 @@ const {
   deleteUser
 } = require("../controllers/registerController");
 const { updatePaymentStatus ,updateDueDateStatus} = require("../controllers/paymentController");
-const uploadImage = require("../config/multer.js");
 
 const router = express.Router();
 
 // Route to register a new user (Default: "user", but can set "admin" manually)
-router.post("/register", uploadImage.single("image"), registerUser);
+router.post("/register",  registerUser);
 
 // Route to get all users
 router.get("/getAll", getAllUsers);
@@ -30,7 +29,6 @@ router.get("/admin-dashboard", checkAdmin, (req, res) => {
 });
 
 // Route to update payment status of a user
-// router.put("/user/:id/payment-status", checkAdmin, updatePaymentStatus);
 router.put("/:id/payment-status", updatePaymentStatus);
 router.put("/duedate/:userId/:duedateId",updateDueDateStatus)
 
