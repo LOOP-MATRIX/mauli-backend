@@ -4,6 +4,7 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 package-lock.json
+package.json
 .env
 
 # Logs
@@ -19,6 +20,8 @@ build/
 
 # Multer Uploads
 uploads/
+images/
+videos/
 
 # Editor settings
 .vscode/

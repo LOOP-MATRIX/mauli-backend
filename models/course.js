@@ -1,15 +1,21 @@
 const mongoose = require("mongoose");
 
-const CourseSchema = new mongoose.Schema(
-    {
-        courseId: { type: String, required: true, unique: true }, // Unique Course ID
-        name: { type: String }, // Course Name
-        duration: { type: String }, // Duration (e.g., "3 Months")
-        price: { type: Number }, // Price (Number format)
-        description: { type: String }, // Course Description
-        image: { type: String } // Image URL
-    },
-    { timestamps: true } // Adds createdAt & updatedAt timestamps
-);
+const courseSchema = new mongoose.Schema({
+    image: String,
+    name: { type: String, required: true },
+    duration: String,
+    fees: String,
+    discount: String,
+    installments: String,
+    recordingsAvailability: String,
+    language: String,
+    classModule: String,
+    platform: String,
+    studyMaterial: String,
+    certificate: String,
+    discussionPlatform: String,
+    keyPoints: String,
+}, { timestamps: true });
 
-module.exports = mongoose.model("Course", CourseSchema);
+module.exports = mongoose.model("Course", courseSchema);
+

@@ -1,10 +1,46 @@
 const Video = require("../models/video");
 const fs = require("fs");
 const path = require("path");
-
-// Upload video
+const ffmpeg = require("fluent-ffmpeg");
+const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg");
+const ffprobeInstaller = require("@ffprobe-installer/ffprobe");
+ffmpeg.setFfmpegPath(ffmpegInstaller.path);
+ffmpeg.setFfprobePath(ffprobeInstaller.path);
 const mongoose = require("mongoose");
 
+// Function to get the codec of the uploaded video
+const getVideoCodec = (filePath) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(filePath, (err, metadata) => {
+      if (err) {
+        reject(err);
+      } else {
+        const videoStream = metadata.streams.find(stream => stream.codec_type === "video");
+        resolve(videoStream ? videoStream.codec_name : null);
+      }
+    });
+  });
+};
+
+// Function to convert H.265 to H.264
+const convertToH264 = (inputPath) => {
+  return new Promise((resolve, reject) => {
+    const outputPath = path.join(path.dirname(inputPath), `converted-${path.basename(inputPath)}`);
+
+    ffmpeg(inputPath)
+      .output(outputPath)
+      .videoCodec("libx264") // Convert to H.264
+      .audioCodec("aac")      // Convert audio for compatibility
+      .on("end", () => {
+        fs.unlinkSync(inputPath); // Delete original H.265 file
+        resolve(outputPath);
+      })
+      .on("error", (err) => reject(err))
+      .run();
+  });
+};
+
+// Upload Video with Format Check & Conversion
 exports.uploadVideo = async (req, res) => {
   try {
     if (!req.file) {
@@ -14,16 +50,25 @@ exports.uploadVideo = async (req, res) => {
     const { courseId } = req.params;
     const { title } = req.body;
 
-    // Validate if courseId is a valid ObjectId
+    // Validate ObjectId
     if (!mongoose.Types.ObjectId.isValid(courseId)) {
       return res.status(400).json({ message: "Invalid courseId format" });
     }
 
+    const inputPath = req.file.path;
+    const codec = await getVideoCodec(inputPath);
+
+    let finalPath = inputPath; // Default to original file
+    if (codec === "hevc") { // If HEVC (H.265), convert
+      console.log("Converting HEVC to H.264...");
+      finalPath = await convertToH264(inputPath);
+    }
+
     const newVideo = new Video({
       title,
-      courseId: new mongoose.Types.ObjectId(courseId), // Convert to ObjectId
-      filename: req.file.filename,
-      size: req.file.size,
+      courseId: new mongoose.Types.ObjectId(courseId),
+      filename: path.basename(finalPath), // Save converted filename
+      size: fs.statSync(finalPath).size, // Get new file size
     });
 
     await newVideo.save();
@@ -32,6 +77,7 @@ exports.uploadVideo = async (req, res) => {
     res.status(500).json({ message: "Error uploading video", error: error.message });
   }
 };
+
 
 
 // Fetch all videos
