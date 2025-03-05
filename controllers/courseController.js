@@ -5,6 +5,10 @@ const batchSchema = require("../models/batch");
 exports.createCourse = async (req, res) => {
   try {
     const { name, duration, fees, keyPoints } = req.body;
+
+    if(!name || !duration || !fees || !keyPoints){
+      return res.status(400).json({message:"all field required"})
+    }
     const image = req.file ? req.file.filename : "";
 
     const course = new Course({
@@ -63,6 +67,11 @@ exports.updateCourse = async (req, res) => {
       // discussionPlatform,
       keyPoints,
     } = req.body;
+
+    if(!name || !duration || !fees || !keyPoints){
+      return res.status(400).json({message:"all field required"})
+    }
+    
     let updatedData = {
       name,
       duration,

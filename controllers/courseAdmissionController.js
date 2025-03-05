@@ -33,6 +33,10 @@ const createAdmission = async (req, res) => {
     try {
         const { name,subject,message, email,contact } = req.body;
 
+        if(!name || !subject || !message || !email || !contact){
+            return res.status(400).json({message:"all field required"})
+        }
+
         // Check if email already exists
         const existingUser = await CourseAdmission.findOne({ email });
         if (existingUser) {
