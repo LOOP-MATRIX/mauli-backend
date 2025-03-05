@@ -40,6 +40,7 @@
         message:{
             type:String
         },
+        contact:String,
         email:{
             type:String,
             unique:true

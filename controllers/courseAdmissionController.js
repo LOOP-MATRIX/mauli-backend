@@ -31,7 +31,7 @@ const CourseAdmission = require("../models/courseAdmission");
 
 const createAdmission = async (req, res) => {
     try {
-        const { name,subject,message, email } = req.body;
+        const { name,subject,message, email,contact } = req.body;
 
         // Check if email already exists
         const existingUser = await CourseAdmission.findOne({ email });
@@ -44,7 +44,8 @@ const createAdmission = async (req, res) => {
             name,
             subject,
             message,
-            email
+            email,
+            contact
         });
 
         await newAdmission.save();
