@@ -11,7 +11,6 @@ const videoRoute  =require('./routes/videoRoute')
 // const qrRoute = require('./routes/qrRoute')
 const counterRoutes = require("./routes/counterRoutes");
 require('./cron/batchVideoAccess')
-require('./cron/payment')
 
 dotenv.config();
 
