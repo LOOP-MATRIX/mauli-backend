@@ -16,10 +16,6 @@ error.log
 dist/
 build/
 
-# Multer Uploads
-uploads/
-images/
-videos/
 
 # Editor settings
 .vscode/
